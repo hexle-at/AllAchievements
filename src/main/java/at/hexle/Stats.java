@@ -26,7 +26,7 @@ public class Stats {
         Pagination<String> pagination = new Pagination<>(45, AllAchievements.getAllAchievemnts());
 
         for(int i = 0; i < 45; i++){
-            if(finishedAdvancements.contains(pagination.getPage(page).get(i))){
+            if(finishedAdvancements.contains(pagination.get(i))){
                 inv.setItem(i, new ItemStack(Material.GREEN_DYE, 1));
             }else{
                 inv.setItem(i, new ItemStack(Material.RED_DYE, 1));
@@ -48,14 +48,19 @@ public class Stats {
         ItemStack item4 = new ItemStack(Material.ARROW, 1);
         ItemMeta im4 = item4.getItemMeta();
         im4.setDisplayName("§6Last Page");
-        im4.setLore(Collections.singletonList("§7Page: " + last));
         item4.setItemMeta(im4);
         inv.setItem(48, item4);
+
+        ItemStack item6 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+        ItemMeta im6 = item6.getItemMeta();
+        im6.setDisplayName("§6Page " + page);
+        item6.setItemMeta(im6);
+        inv.setItem(49, item6);
+
 
         ItemStack item5 = new ItemStack(Material.ARROW, 1);
         ItemMeta im5 = item5.getItemMeta();
         im5.setDisplayName("§6Next Page");
-        im5.setLore(Collections.singletonList("§7Page:" + next));
         item5.setItemMeta(im5);
         inv.setItem(50, item5);
 
