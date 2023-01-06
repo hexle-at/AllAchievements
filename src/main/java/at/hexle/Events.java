@@ -28,16 +28,15 @@ public class Events implements Listener {
     public void onInvClick(InventoryClickEvent event){
         if(event.getView().getTitle().equals("§6AllAchievements")){
             event.setCancelled(true);
-            if(event.getCurrentItem() == null) return;
-            if(event.getCurrentItem().getType() == Material.ARROW){
-                int page = Integer.parseInt(event.getInventory().getItem(49).getItemMeta().getLore().get(0).split(" ")[1]);
-                if(event.getSlot() == 48){
-                    page--;
-                }else if(event.getSlot() == 50){
-                    page++;
-                }
-                Stats.showStats((Player) event.getWhoClicked(), page);
+            int page = Integer.parseInt(event.getInventory().getItem(49).getItemMeta().getLore().get(0).split(" ")[1]);
+            System.out.println(page);
+            if(event.getSlot() == 48){
+                page--;
+            }else if(event.getSlot() == 50){
+                page++;
             }
+            Stats.showStats((Player) event.getWhoClicked(), page);
+
         }
     }
 
