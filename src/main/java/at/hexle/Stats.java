@@ -27,9 +27,17 @@ public class Stats {
 
         for(int i = 0; i < 45; i++){
             if(finishedAdvancements.contains(pagination.get(i))){
-                inv.setItem(i, new ItemStack(Material.GREEN_DYE, 1));
+                ItemStack is = new ItemStack(Material.GREEN_DYE, 1);
+                ItemMeta im = is.getItemMeta();
+                im.setDisplayName("§7"+pagination.get(i));
+                is.setItemMeta(im);
+                inv.setItem(i, is);
             }else{
-                inv.setItem(i, new ItemStack(Material.RED_DYE, 1));
+                ItemStack is = new ItemStack(Material.RED_DYE, 1);
+                ItemMeta im = is.getItemMeta();
+                im.setDisplayName("§7"+pagination.get(i));
+                is.setItemMeta(im);
+                inv.setItem(i, is);
             }
         }
 

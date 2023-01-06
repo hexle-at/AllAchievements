@@ -35,7 +35,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage("§6/av stop §7- §eStops the achievementhunt");
         sender.sendMessage("§6/av pause §7- §ePauses the achievementhunt");
         sender.sendMessage("§6/av reset §7- §eResets the achievementhunt");
-        sender.sendMessage("§6/av finished §7- §eShows all finished achievements");
+        sender.sendMessage("§6/av stats §7- §eShows all achievements");
     }
 
 }

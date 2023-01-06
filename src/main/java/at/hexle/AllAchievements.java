@@ -3,13 +3,17 @@ package at.hexle;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +32,12 @@ public class AllAchievements extends JavaPlugin implements Listener {
     public void onEnable(){
         this.saveDefaultConfig();
         timerseconds = this.getConfig().getInt("timer");
+
+        List<String> list = this.getConfig().getStringList("advancements");
+        for(String s : list){
+            finishedAdvancementList.add(Bukkit.getAdvancement(NamespacedKey.fromString(s)));
+        }
+
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("._   _   _____  __  __  _       _____");
@@ -70,7 +80,11 @@ public class AllAchievements extends JavaPlugin implements Listener {
     public void onDisable(){
         Bukkit.getConsoleSender().sendMessage("Plugin shutdown...");
         FileConfiguration config = this.getConfig();
-        config.set("advancements", finishedAdvancementList);
+        ArrayList<String> list = new ArrayList<>();
+        for(Advancement a : finishedAdvancementList){
+            list.add(a.getKey().toString());
+        }
+        config.set("advancements", list);
         config.set("timer", timerseconds);
         saveConfig();
     }
@@ -128,6 +142,13 @@ public class AllAchievements extends JavaPlugin implements Listener {
         timer = false;
         timerseconds = 0;
         finishedAdvancementList.clear();
+        for(OfflinePlayer player : Bukkit.getOfflinePlayers()){
+            Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
+            while (iterator.hasNext()){
+                AdvancementProgress progress = player.getPlayer().getAdvancementProgress(iterator.next());
+                for (String criteria : progress.getAwardedCriteria()) progress.revokeCriteria(criteria);
+            }
+        }
     }
 
     public AllAchievements getInstance(){
