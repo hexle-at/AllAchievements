@@ -22,6 +22,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if (args.length <= 1) {
             StringUtil.copyPartialMatches(args[0], Arrays.asList(this.commands), completions);
         }
-        return null;
+        return completions;
     }
 }
