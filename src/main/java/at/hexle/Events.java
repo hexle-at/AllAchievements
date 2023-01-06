@@ -29,7 +29,8 @@ public class Events implements Listener {
     public void onInvClick(InventoryClickEvent event){
         if(event.getView().getTitle().equals("§6AllAchievements")){
             event.setCancelled(true);
-            int page = Integer.parseInt(event.getInventory().getItem(49).getItemMeta().getDisplayName().split(" ")[1]);
+            int page = Integer.parseInt(event.getInventory().getItem(49).getItemMeta().getLore().get(0).split(" ")[1]);
+            System.out.println(page);
             if(event.getSlot() == 48){
                 page--;
             }else if(event.getSlot() == 50){
@@ -38,6 +39,7 @@ public class Events implements Listener {
                 return;
             }
             Stats.showStats((Player) event.getWhoClicked(), page);
+
         }
     }
 
