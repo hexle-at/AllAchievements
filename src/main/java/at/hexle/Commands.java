@@ -22,7 +22,6 @@ public class Commands implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("reset")) {
             AllAchievements.reset();
         } else if (args[0].equalsIgnoreCase("stats")){
-            List<String> finished = AllAchievements.getFinishedAchievements();
             Stats.showStats((Player) sender, 0);
         } else {
             sendHelp(sender);

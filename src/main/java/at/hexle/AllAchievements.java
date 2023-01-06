@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class AllAchievements extends JavaPlugin implements Listener {
 
@@ -78,9 +79,11 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Iterator<Advancement> advancementIterator = Bukkit.getServer().advancementIterator();
         while(advancementIterator.hasNext()){
             Advancement a = advancementIterator.next();
-            if(a.getDisplay().shouldAnnounceChat()){
-                advancementList.add(a);
-            }
+            try {
+                if (Objects.requireNonNull(a.getDisplay()).shouldAnnounceChat()) {
+                    advancementList.add(a);
+                }
+            }catch (Exception e){}
         }
     }
 
