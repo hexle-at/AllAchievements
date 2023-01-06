@@ -91,18 +91,26 @@ public class AllAchievements extends JavaPlugin implements Listener {
         return finishedStrings;
     }
 
+    public static List<String> getAllAchievemnts(){
+        List<String> allStrings = new ArrayList<>();
+        for(Advancement advancement : advancementList){
+            allStrings.add(advancement.getDisplay().getTitle());
+        }
+        return allStrings;
+    }
+
     public static void start(){
-        //start timer and listerner
+        //start timer and listener
         timer = true;
     }
 
     public static void stop(){
-        //stop timer and listerner
+        //stop timer and listener
         timer = false;
     }
 
     public static void pause(){
-        //pause timer and listerner
+        //pause timer and listener
         if(timer){
             timer = false;
         }else{
@@ -126,7 +134,11 @@ public class AllAchievements extends JavaPlugin implements Listener {
         int remainder = timerseconds % 3600;
         int minutes = remainder / 60;
         int seconds = remainder % 60;
-        return "§6" + hours + ":" + minutes + ":" + seconds;
+
+        //fromat string to 00:00:00
+        String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+        return "§6" + time;
     }
 
 }
