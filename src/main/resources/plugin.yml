@@ -1,0 +1,10 @@
+main: at.hexle.AllAchievements
+authors:
+  - Beni
+  - Fabi
+version: 1.0.0
+api-version: 1.19
+name: AllAchievements
+
+commands:
+  av:
