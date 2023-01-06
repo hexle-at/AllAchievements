@@ -3,6 +3,7 @@ package at.hexle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -20,16 +21,9 @@ public class Commands implements CommandExecutor {
             AllAchievements.pause();
         } else if (args[0].equalsIgnoreCase("reset")) {
             AllAchievements.reset();
-        } else if (args[0].equalsIgnoreCase("finished")){
+        } else if (args[0].equalsIgnoreCase("stats")){
             List<String> finished = AllAchievements.getFinishedAchievements();
-            if (finished.size() == 0) {
-                sender.sendMessage("§cNo achievements finished yet.");
-            } else {
-                sender.sendMessage("§6The following achievements are finished:");
-                for (String a : finished) {
-                    sender.sendMessage("§a" + a);
-                }
-            }
+            Stats.showStats((Player) sender, 0);
         } else {
             sendHelp(sender);
         }

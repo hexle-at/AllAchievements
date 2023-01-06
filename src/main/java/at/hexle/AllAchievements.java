@@ -70,6 +70,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage("Plugin shutdown...");
         FileConfiguration config = this.getConfig();
         config.set("advancements", finishedAdvancementList);
+        config.set("timer", timerseconds);
         saveConfig();
     }
 
@@ -77,7 +78,9 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Iterator<Advancement> advancementIterator = Bukkit.getServer().advancementIterator();
         while(advancementIterator.hasNext()){
             Advancement a = advancementIterator.next();
-            advancementList.add(a);
+            if(a.getDisplay().shouldAnnounceChat()){
+                advancementList.add(a);
+            }
         }
     }
 
