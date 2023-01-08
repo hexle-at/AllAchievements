@@ -18,7 +18,7 @@ public class Stats {
         }
 
         List<String> finishedAdvancements = AllAchievements.getInstance().getFinishedAchievements();
-        Pagination<String> pagination = new Pagination<>(45, AllAchievements.getInstance().getAllAchievemnts());
+        Pagination<String> pagination = new Pagination<>(45, AllAchievements.getInstance().getAllAchievements());
 
         for(int i = 0; i < 45; i++){
             if(finishedAdvancements.contains(pagination.get(i))){

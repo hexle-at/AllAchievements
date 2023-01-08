@@ -57,6 +57,7 @@ public class Events implements Listener {
         }
     }
 
+
     @EventHandler
     public void onJoin(PlayerPreLoginEvent event){
         if(AllAchievements.getInstance().isRestartTriggered()){
