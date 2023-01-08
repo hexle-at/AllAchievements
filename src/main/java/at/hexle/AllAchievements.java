@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,11 +24,8 @@ public class AllAchievements extends JavaPlugin implements Listener {
     private String version = "";
 
     private boolean timer = false;
-    private boolean newWorldOnRestart = false;
-    private boolean restartTriggered = false;
     private int timerseconds = 0;
-    private List<String> worlds;
-    private List<String> resetPlayers; //uuid
+    private List<String> resetPlayers;
 
     private static AllAchievements instance;
 
@@ -48,12 +44,10 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
         this.saveDefaultConfig();
         timerseconds = this.getConfig().getInt("timer");
-        newWorldOnRestart = this.getConfig().getBoolean("newWorldOnRestart");
-        worlds = this.getConfig().getStringList("worldList");
 
         List<String> list = this.getConfig().getStringList("advancements");
         for(String s : list){
-            finishedAdvancementList.add(Bukkit.getAdvancement(NamespacedKey.fromString(s)));
+            finishedAdvancementList.add(Bukkit.getAdvancement(NamespacedKey.minecraft(s.split(":")[1])));
         }
 
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
@@ -131,8 +125,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
                         advancementList.add(a);
                     }
                 }else {
-                    Advancement adv = Bukkit.getAdvancement(a.getKey());
-                    AdvancementInfo info = new AdvancementInfo(adv);
+                    AdvancementInfo info = new AdvancementInfo(a);
                     if(info != null && info.announceToChat()){
                         advancementList.add(a);
                     }
@@ -151,8 +144,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
             }
         }else{
             for(Advancement advancement : finishedAdvancementList){
-                Advancement adv = Bukkit.getAdvancement(advancement.getKey());
-                AdvancementInfo info = new AdvancementInfo(adv);
+                AdvancementInfo info = new AdvancementInfo(advancement);
                 finishedStrings.add(info.getTitle());
             }
         }
@@ -188,37 +180,37 @@ public class AllAchievements extends JavaPlugin implements Listener {
         }
     }
 
+    //Pre Feature - default world cannot be removed
     public void restart(){
-        restartTriggered = true;
-        reset();
-        for(Player player : Bukkit.getOnlinePlayers()){
-            player.kickPlayer("Challenge restarting...");
-        }
+        //restartTriggered = true;
+        //reset();
+        //for(Player player : Bukkit.getOnlinePlayers()){
+        //    player.kickPlayer("Challenge restarting...");
+        //}
 
-        if(newWorldOnRestart && restartTriggered){
-            for(String world : worlds){
-                if(Bukkit.getWorld(world) == null) continue;
-                System.out.println("Generating new world: "+world);
-                File worldFile = Bukkit.getWorld(world).getWorldFolder();
-                Bukkit.unloadWorld(world, false);
-                worldFile.delete();
-            }
+        //if(newWorldOnRestart && restartTriggered){
+        //    for(String world : worlds){
+        //        if(Bukkit.getWorld(world) == null) continue;
+        //        System.out.println("Generating new world: "+world);
+        //        File worldFile = Bukkit.getWorld(world).getWorldFolder();
+        //        Bukkit.unloadWorld(world, false);
+        //        worldFile.delete();
+        //    }
+        //    for(String world : worlds){
+        //        WorldCreator wc = new WorldCreator(world);
+        //        if(world.contains("nether")){
+        //            wc.environment(World.Environment.NETHER);
+        //        }else if(world.contains("end")) {
+        //            wc.environment(World.Environment.THE_END);
+        //        }else{
+        //            wc.environment(World.Environment.NORMAL);
+        //        }
+        //        wc.type(WorldType.NORMAL);
+        //        Bukkit.createWorld(wc);
+        //    }
+        //}
 
-            for(String world : worlds){
-                WorldCreator wc = new WorldCreator(world);
-                if(world.contains("nether")){
-                    wc.environment(World.Environment.NETHER);
-                }else if(world.contains("end")) {
-                    wc.environment(World.Environment.THE_END);
-                }else{
-                    wc.environment(World.Environment.NORMAL);
-                }
-                wc.type(WorldType.NORMAL);
-                Bukkit.createWorld(wc);
-            }
-        }
-
-        restartTriggered = false;
+        //restartTriggered = false;
     }
 
     public void reset(){
@@ -226,14 +218,15 @@ public class AllAchievements extends JavaPlugin implements Listener {
         timerseconds = 0;
         finishedAdvancementList.clear();
         for(OfflinePlayer player : Bukkit.getOfflinePlayers()){
+            if(player.getPlayer() == null){
+                resetPlayers.add(player.getUniqueId().toString());
+                continue;
+            }
             Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
             while (iterator.hasNext()){
-                if(player.getPlayer() == null){
-                    resetPlayers.add(player.getUniqueId().toString());
-                    continue;
-                }
                 AdvancementProgress progress = player.getPlayer().getAdvancementProgress(iterator.next());
                 for (String criteria : progress.getAwardedCriteria()) progress.revokeCriteria(criteria);
+
             }
         }
     }
@@ -263,14 +256,6 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public boolean isRunning(){
         return timer;
-    }
-
-    public boolean isNewWorldOnRestart() {
-        return newWorldOnRestart;
-    }
-
-    public boolean isRestartTriggered() {
-        return restartTriggered;
     }
 
     public String getVersion(){

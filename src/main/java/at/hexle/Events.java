@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
 
 import java.util.Iterator;
 
@@ -38,8 +37,9 @@ public class Events implements Listener {
             Bukkit.broadcastMessage("§aAll achievements completed!");
             Bukkit.broadcastMessage("§7------------------------------");
             Bukkit.broadcastMessage(" ");
-            Bukkit.broadcastMessage("§6Want to play again? Type §a/av restart §6(There will be a new world and the server will be restarted.)");
+            Bukkit.broadcastMessage("§6Want to play again? Type §a/av reset");
             Bukkit.broadcastMessage(" ");
+            AllAchievements.getInstance().pause();
         }
     }
 
@@ -48,7 +48,6 @@ public class Events implements Listener {
         if(event.getView().getTitle().equals("§6AllAchievements")){
             event.setCancelled(true);
             int page = Integer.parseInt(event.getInventory().getItem(49).getItemMeta().getDisplayName().split(" ")[1]);
-            System.out.println(page);
             if(event.getSlot() == 48){
                 page--;
             }else if(event.getSlot() == 50){
@@ -57,15 +56,6 @@ public class Events implements Listener {
                 return;
             }
             Stats.showStats((Player) event.getWhoClicked(), page);
-        }
-    }
-
-
-    @EventHandler
-    public void onPreJoin(PlayerPreLoginEvent event){
-        if(AllAchievements.getInstance().isRestartTriggered()){
-            event.setResult(PlayerPreLoginEvent.Result.KICK_OTHER);
-            event.setKickMessage("§cThe challenge is restarting ... Please try again in a few seconds!");
         }
     }
 

@@ -13,7 +13,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     final String[] commands;
 
     public TabCompleter() {
-        this.commands = new String[] { "start", "stop", "reset", "pause", "stats"};
+        this.commands = new String[] { "start", "reset", "pause", "stats"};
     }
 
     @Override

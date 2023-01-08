@@ -13,11 +13,19 @@ public class Commands implements CommandExecutor {
         if (args.length == 0) {
             sendHelp(sender);
         } else if (args[0].equalsIgnoreCase("start")){
+            if(!sender.hasPermission("av.timer.start")) {
+                noPerm(sender);
+                return false;
+            }
             AllAchievements.getInstance().start();
             Bukkit.broadcastMessage("§7-------- §6AllAchievements§7 ----------");
             Bukkit.broadcastMessage("§aThe challenge has been started!");
             Bukkit.broadcastMessage("§7--------------------------------");
         } else if (args[0].equalsIgnoreCase("pause")){
+            if(!sender.hasPermission("av.timer.pause")) {
+                noPerm(sender);
+                return false;
+            }
             if(AllAchievements.getInstance().isRunning()){
                 Bukkit.broadcastMessage("§7-------- §6AllAchievements§7 ----------");
                 Bukkit.broadcastMessage("§cThe challenge has been paused!");
@@ -29,31 +37,28 @@ public class Commands implements CommandExecutor {
             }
             AllAchievements.getInstance().pause();
         } else if (args[0].equalsIgnoreCase("reset")) {
+            if(!sender.hasPermission("av.timer.reset")) {
+                noPerm(sender);
+                return false;
+            }
             Bukkit.broadcastMessage("§7-------- §6AllAchievements§7 ----------");
             Bukkit.broadcastMessage("§cThe challenge has been reset!");
             Bukkit.broadcastMessage("§7--------------------------------");
             AllAchievements.getInstance().reset();
         } else if (args[0].equalsIgnoreCase("stats")){
+            if(!sender.hasPermission("av.stats")) {
+                noPerm(sender);
+                return false;
+            }
             Stats.showStats((Player) sender, 0);
-        } else if (args[0].equalsIgnoreCase("restart")){
-            if(!AllAchievements.getInstance().isNewWorldOnRestart()){
-                Bukkit.broadcastMessage("§7-------- §6AllAchievements§7 ----------");
-                Bukkit.broadcastMessage("§cPlease enable this in your config: §6newWorldOnRestart: true");
-                Bukkit.broadcastMessage("§7--------------------------------");
-                return true;
-            }
-            if(AllAchievements.getInstance().isRunning()){
-                sender.sendMessage("§cStop the timer before restarting! §6/av pause");
-            }else{
-                Bukkit.broadcastMessage("§7-------- §6AllAchievements§7 ----------");
-                Bukkit.broadcastMessage("§aThe challenge is restarting ...");
-                Bukkit.broadcastMessage("§7--------------------------------");
-                AllAchievements.getInstance().restart();
-            }
         } else {
             sendHelp(sender);
         }
         return true;
+    }
+
+    public static void noPerm(CommandSender sender){
+        sender.sendMessage("§cYou don't have permission to execute this command!");
     }
 
     public static void sendHelp(CommandSender sender){
@@ -61,7 +66,6 @@ public class Commands implements CommandExecutor {
         sender.sendMessage("§6/av start §7- §eStarts the challange");
         sender.sendMessage("§6/av pause §7- §ePauses the challange");
         sender.sendMessage("§6/av reset §7- §eResets the challange");
-        sender.sendMessage("§6/av restart §7- §eGenerates new world and resets the challange");
         sender.sendMessage("§6/av stats §7- §eShows all challange");
     }
 
