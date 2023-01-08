@@ -1,16 +1,13 @@
 package at.hexle;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 
 public class Events implements Listener {
 
@@ -18,11 +15,21 @@ public class Events implements Listener {
     public void onAchievement(PlayerAdvancementDoneEvent event){
         if(event.getAdvancement() == null || event.getAdvancement().getDisplay() == null) return;
         if(!event.getAdvancement().getDisplay().shouldAnnounceChat()) return;
-        if(AllAchievements.finishedAdvancementList.contains(event.getAdvancement())) return;
-        AllAchievements.finishedAdvancementList.add(event.getAdvancement());
+        if(AllAchievements.getInstance().getFinishedAdvancementList().contains(event.getAdvancement())) return;
+        AllAchievements.getInstance().getFinishedAdvancementList().add(event.getAdvancement());
         Bukkit.broadcastMessage("§7------- §6AllAchievements§7 ---------");
-        Bukkit.broadcastMessage("§6"+AllAchievements.finishedAdvancementList.size()+"/"+AllAchievements.advancementList.size()+" achievements completed!");
+        Bukkit.broadcastMessage("§6"+AllAchievements.getInstance().getFinishedAdvancementList().size()+"/"+AllAchievements.getInstance().getAdvancementList().size()+" achievements completed!");
         Bukkit.broadcastMessage("§7------------------------------");
+
+        if(AllAchievements.getInstance().getFinishedAdvancementList().size() == AllAchievements.getInstance().getAdvancementList().size()) {
+            Bukkit.broadcastMessage("§7------- §6AllAchievements§7 ---------");
+            Bukkit.broadcastMessage("§aAll achievements completed!");
+            Bukkit.broadcastMessage("§7------------------------------");
+            Bukkit.broadcastMessage(" ");
+            Bukkit.broadcastMessage("§6Want to play again? Type §a/av restart §6(There will be a new world and the server will be restarted.)");
+            Bukkit.broadcastMessage(" ");
+
+        }
     }
 
     @EventHandler
@@ -39,8 +46,14 @@ public class Events implements Listener {
                 return;
             }
             Stats.showStats((Player) event.getWhoClicked(), page);
-
         }
     }
 
+    @EventHandler
+    public void onJoin(PlayerPreLoginEvent event){
+        if(AllAchievements.getInstance().isRestartTriggered()){
+            event.setResult(PlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage("§cThe challenge is restarting ... Please try again in a few seconds!");
+        }
+    }
 }

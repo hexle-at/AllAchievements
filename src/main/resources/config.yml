@@ -1,2 +1,7 @@
+# Config
+# newWorldOnRestart - If true, a new world will be generated on /av restart
+# worldList - List of worlds that will be generated - if name contains the_end or nether, the world will be generated as end or nether world
 advancements: []
 timer: 0
+newWorldOnRestart: false
+worldList: ["world", "world_the_end", "world_nether"]
