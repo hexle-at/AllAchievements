@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Developed by Hexle
+ * Developed by Hexle - included from HEXLE-API
+ * @version 1.0
  *
  * Calculate a page for example for an Inventory
  * @param <T> Type/Class
@@ -53,7 +54,6 @@ public class Pagination<T> extends ArrayList<T> {
      * @return true if it exists, otherwise false
      */
     public boolean exists(int page) {
-        //return !(page < 0) && page < totalPages();
         return page < 0 || page > totalPages();
     }
 

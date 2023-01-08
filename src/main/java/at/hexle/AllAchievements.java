@@ -3,6 +3,9 @@ package at.hexle;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,16 +26,23 @@ public class AllAchievements extends JavaPlugin implements Listener {
     private List<Advancement> finishedAdvancementList;
 
     private boolean timer = false;
+    private boolean newWorldOnRestart = false;
+    private boolean restartTriggered = false;
     private int timerseconds = 0;
+    private List<String> worlds;
+
+    private static AllAchievements instance;
 
     @Override
     public void onEnable(){
-
+        instance = this;
         advancementList = new ArrayList<>();
         finishedAdvancementList = new ArrayList<>();
 
         this.saveDefaultConfig();
         timerseconds = this.getConfig().getInt("timer");
+        newWorldOnRestart = this.getConfig().getBoolean("newWorldOnRestart");
+        worlds = this.getConfig().getStringList("worldList");
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("._   _   _____  __  __  _       _____");
@@ -52,7 +63,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                if(timer && Bukkit.getOnlinePlayers().size() >= 2){
+                if(timer && Bukkit.getOnlinePlayers().size() > 0){
                     timerseconds++;
                 }
                 if(timerseconds > 0){
@@ -110,22 +121,47 @@ public class AllAchievements extends JavaPlugin implements Listener {
     }
 
     public void start(){
-        //start timer and listener
         timer = true;
     }
 
-    public void stop(){
-        //stop timer and listener
-        timer = false;
-    }
-
     public void pause(){
-        //pause timer and listener
         if(timer){
             timer = false;
         }else{
             timer = true;
         }
+    }
+
+    public void restart(){
+        restartTriggered = true;
+        reset();
+        for(Player player : Bukkit.getOnlinePlayers()){
+            player.kickPlayer("Challenge restarting...");
+        }
+
+        if(newWorldOnRestart && restartTriggered){
+            for(String world : worlds){
+                if(Bukkit.getWorld(world) == null) continue;
+                File worldFile = Bukkit.getWorld(world).getWorldFolder();
+                Bukkit.unloadWorld(world, false);
+                worldFile.delete();
+            }
+
+            for(String world : worlds){
+                WorldCreator wc = new WorldCreator(world);
+                if(world.contains("nether")){
+                    wc.environment(World.Environment.NETHER);
+                }else if(world.contains("end")) {
+                    wc.environment(World.Environment.THE_END);
+                }else{
+                    wc.environment(World.Environment.NORMAL);
+                }
+                wc.type(WorldType.NORMAL);
+                Bukkit.createWorld(wc);
+            }
+        }
+
+        restartTriggered = false;
     }
 
     public void reset(){
@@ -134,8 +170,16 @@ public class AllAchievements extends JavaPlugin implements Listener {
         finishedAdvancementList.clear();
     }
 
-    public AllAchievements getInstance(){
-        return this;
+    public static AllAchievements getInstance(){
+        return instance;
+    }
+
+    public List<Advancement> getAdvancementList() {
+        return advancementList;
+    }
+
+    public List<Advancement> getFinishedAdvancementList() {
+        return finishedAdvancementList;
     }
 
     public String getTime(){
@@ -149,6 +193,18 @@ public class AllAchievements extends JavaPlugin implements Listener {
         String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
         return "§6" + time;
+    }
+
+    public boolean isRunning(){
+        return timer;
+    }
+
+    public boolean isNewWorldOnRestart() {
+        return newWorldOnRestart;
+    }
+
+    public boolean isRestartTriggered() {
+        return restartTriggered;
     }
 
 }

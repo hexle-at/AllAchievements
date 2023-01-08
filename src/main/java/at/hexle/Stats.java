@@ -6,9 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class Stats {
@@ -20,10 +17,8 @@ public class Stats {
             inv.setItem(i, new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1));
         }
 
-        int next, last;
-
-        List<String> finishedAdvancements = AllAchievements.getFinishedAchievements();
-        Pagination<String> pagination = new Pagination<>(45, AllAchievements.getAllAchievemnts());
+        List<String> finishedAdvancements = AllAchievements.getInstance().getFinishedAchievements();
+        Pagination<String> pagination = new Pagination<>(45, AllAchievements.getInstance().getAllAchievemnts());
 
         for(int i = 0; i < 45; i++){
             if(finishedAdvancements.contains(pagination.get(i))){
@@ -33,18 +28,6 @@ public class Stats {
             }
         }
 
-        if(pagination.exists(page + 1)){
-            next = 0;
-        }else{
-            next = page+1;
-        }
-        if(page-1<0){
-            last = pagination.totalPages();
-        }else{
-            last = page-1;
-        }
-
-        //set arrows to navigate between pages
         ItemStack item4 = new ItemStack(Material.ARROW, 1);
         ItemMeta im4 = item4.getItemMeta();
         im4.setDisplayName("§6Last Page");
@@ -57,7 +40,6 @@ public class Stats {
         item6.setItemMeta(im6);
         inv.setItem(49, item6);
 
-
         ItemStack item5 = new ItemStack(Material.ARROW, 1);
         ItemMeta im5 = item5.getItemMeta();
         im5.setDisplayName("§6Next Page");
@@ -66,5 +48,4 @@ public class Stats {
 
         player.openInventory(inv);
     }
-
 }
