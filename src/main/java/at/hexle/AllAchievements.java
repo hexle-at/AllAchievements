@@ -21,8 +21,8 @@ public class AllAchievements extends JavaPlugin implements Listener {
     private List<Advancement> advancementList;
     private List<Advancement> finishedAdvancementList;
 
-    public static boolean timer = false;
-    public static int timerseconds = 0;
+    private boolean timer = false;
+    private int timerseconds = 0;
 
     @Override
     public void onEnable(){
@@ -138,7 +138,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         return this;
     }
 
-    public static String getTime(){
+    public String getTime(){
         //format to Timestring timerseconds
         int hours = timerseconds / 3600;
         int remainder = timerseconds % 3600;
