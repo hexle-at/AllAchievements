@@ -1,11 +1,9 @@
 package at.hexle;
 
+import at.hexle.api.AdvancementInfo;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,6 +21,8 @@ public class AllAchievements extends JavaPlugin implements Listener {
     private List<Advancement> advancementList;
     private List<Advancement> finishedAdvancementList;
 
+    private String version = "";
+
     private boolean timer = false;
     private boolean newWorldOnRestart = false;
     private boolean restartTriggered = false;
@@ -37,6 +37,12 @@ public class AllAchievements extends JavaPlugin implements Listener {
         advancementList = new ArrayList<>();
         finishedAdvancementList = new ArrayList<>();
 
+        try{
+            version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         this.saveDefaultConfig();
         timerseconds = this.getConfig().getInt("timer");
         newWorldOnRestart = this.getConfig().getBoolean("newWorldOnRestart");
@@ -50,6 +56,20 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage("|_| |_| |_____| /_/\\_\\ |_____| |_____|");
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("Hexle_Development_Systems - https://hexle.at");
+        Bukkit.getConsoleSender().sendMessage("");
+        if(!version.startsWith("v1_19")
+                && !version.startsWith("v1_18")
+                && !version.startsWith("v1_17")
+                && !version.startsWith("v1_16")
+                && !version.startsWith("v1_15")
+                && !version.startsWith("v1_14")
+                && !version.startsWith("v1_13")
+                && !version.startsWith("v1_12")){
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"Version not compatible: found "+version+" - required: 1.12+");
+            Bukkit.getConsoleSender().sendMessage("");
+            Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
+            getPluginLoader().disablePlugin(this);
+        }
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
 
@@ -93,8 +113,16 @@ public class AllAchievements extends JavaPlugin implements Listener {
         while(advancementIterator.hasNext()){
             Advancement a = advancementIterator.next();
             try {
-                if (Objects.requireNonNull(a.getDisplay()).shouldAnnounceChat()) {
-                    advancementList.add(a);
+                if(version.startsWith("v1_19")){
+                    if (Objects.requireNonNull(a.getDisplay()).shouldAnnounceChat()) {
+                        advancementList.add(a);
+                    }
+                }else {
+                    Advancement adv = Bukkit.getAdvancement(a.getKey());
+                    AdvancementInfo info = new AdvancementInfo(adv);
+                    if(info != null && info.announceToChat()){
+                        advancementList.add(a);
+                    }
                 }
             }catch (Exception e){}
         }
@@ -104,16 +132,33 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public List<String> getFinishedAchievements(){
         List<String> finishedStrings = new ArrayList<>();
-        for(Advancement advancement : finishedAdvancementList){
-            finishedStrings.add(advancement.getDisplay().getTitle());
+        if(version.startsWith("v1_19")){
+            for(Advancement advancement : finishedAdvancementList){
+                finishedStrings.add(advancement.getDisplay().getTitle());
+            }
+        }else{
+            for(Advancement advancement : finishedAdvancementList){
+                Advancement adv = Bukkit.getAdvancement(advancement.getKey());
+                AdvancementInfo info = new AdvancementInfo(adv);
+                finishedStrings.add(info.getTitle());
+            }
         }
+
         return finishedStrings;
     }
 
     public List<String> getAllAchievemnts(){
         List<String> allStrings = new ArrayList<>();
-        for(Advancement advancement : advancementList){
-            allStrings.add(advancement.getDisplay().getTitle());
+        if(version.startsWith("v1_19")){
+            for(Advancement advancement : advancementList){
+                allStrings.add(advancement.getDisplay().getTitle());
+            }
+        }else{
+            for(Advancement advancement : advancementList){
+                Advancement adv = Bukkit.getAdvancement(advancement.getKey());
+                AdvancementInfo info = new AdvancementInfo(adv);
+                allStrings.add(info.getTitle());
+            }
         }
         return allStrings;
     }
@@ -203,6 +248,10 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public boolean isRestartTriggered() {
         return restartTriggered;
+    }
+
+    public String getVersion(){
+        return version;
     }
 
 }

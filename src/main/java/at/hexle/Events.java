@@ -1,6 +1,8 @@
 package at.hexle;
 
+import at.hexle.api.AdvancementInfo;
 import org.bukkit.Bukkit;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,15 +14,22 @@ public class Events implements Listener {
 
     @EventHandler
     public void onAchievement(PlayerAdvancementDoneEvent event){
-        if(event.getAdvancement() == null || event.getAdvancement().getDisplay() == null) return;
-        if(!event.getAdvancement().getDisplay().shouldAnnounceChat()) return;
-        if(AllAchievements.getInstance().getFinishedAdvancementList().contains(event.getAdvancement())) return;
+        if(AllAchievements.getInstance().getVersion().startsWith("v1_19")) {
+            if (event.getAdvancement() == null || event.getAdvancement().getDisplay() == null) return;
+            if (!event.getAdvancement().getDisplay().shouldAnnounceChat()) return;
+        }else{
+            if(event.getAdvancement() == null) return;
+            Advancement adv = Bukkit.getAdvancement(event.getAdvancement().getKey());
+            AdvancementInfo info = new AdvancementInfo(adv);
+            if(info == null || !info.announceToChat()) return;
+        }
+
+        if (AllAchievements.getInstance().getFinishedAdvancementList().contains(event.getAdvancement())) return;
         AllAchievements.getInstance().getFinishedAdvancementList().add(event.getAdvancement());
         Bukkit.broadcastMessage("§7------- §6AllAchievements§7 ---------");
-        Bukkit.broadcastMessage("§6"+AllAchievements.getInstance().getFinishedAdvancementList().size()+"/"+AllAchievements.getInstance().getAdvancementList().size()+" achievements completed!");
+        Bukkit.broadcastMessage("§6" + AllAchievements.getInstance().getFinishedAdvancementList().size() + "/" + AllAchievements.getInstance().getAdvancementList().size() + " achievements completed!");
         Bukkit.broadcastMessage("§7------------------------------");
-
-        if(AllAchievements.getInstance().getFinishedAdvancementList().size() == AllAchievements.getInstance().getAdvancementList().size()) {
+        if (AllAchievements.getInstance().getFinishedAdvancementList().size() == AllAchievements.getInstance().getAdvancementList().size()) {
             Bukkit.broadcastMessage("§7------- §6AllAchievements§7 ---------");
             Bukkit.broadcastMessage("§aAll achievements completed!");
             Bukkit.broadcastMessage("§7------------------------------");
