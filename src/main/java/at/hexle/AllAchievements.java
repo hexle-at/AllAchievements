@@ -112,7 +112,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         return finishedStrings;
     }
 
-    public List<String> getAllAchievemnts(){
+    public List<String> getAllAchievements(){
         List<String> allStrings = new ArrayList<>();
         for(Advancement advancement : advancementList){
             allStrings.add(advancement.getDisplay().getTitle());
@@ -183,13 +183,11 @@ public class AllAchievements extends JavaPlugin implements Listener {
     }
 
     public String getTime(){
-        //format to Timestring timerseconds
         int hours = timerseconds / 3600;
         int remainder = timerseconds % 3600;
         int minutes = remainder / 60;
         int seconds = remainder % 60;
 
-        //fromat string to 00:00:00
         String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
         return "§6" + time;
@@ -206,5 +204,4 @@ public class AllAchievements extends JavaPlugin implements Listener {
     public boolean isRestartTriggered() {
         return restartTriggered;
     }
-
 }
