@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -221,6 +222,13 @@ public class AllAchievements extends JavaPlugin implements Listener {
         timer = false;
         timerseconds = 0;
         finishedAdvancementList.clear();
+        for(OfflinePlayer player : Bukkit.getOfflinePlayers()){
+            Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
+            while (iterator.hasNext()){
+                AdvancementProgress progress = player.getPlayer().getAdvancementProgress(iterator.next());
+                for (String criteria : progress.getAwardedCriteria()) progress.revokeCriteria(criteria);
+            }
+        }
     }
 
     public static AllAchievements getInstance(){
