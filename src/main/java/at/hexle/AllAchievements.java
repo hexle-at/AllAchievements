@@ -18,14 +18,18 @@ import java.util.Objects;
 
 public class AllAchievements extends JavaPlugin implements Listener {
 
-    public static List<Advancement> advancementList = new ArrayList<>();
-    public static List<Advancement> finishedAdvancementList = new ArrayList<>();
+    private List<Advancement> advancementList;
+    private List<Advancement> finishedAdvancementList;
 
     public static boolean timer = false;
     public static int timerseconds = 0;
 
     @Override
     public void onEnable(){
+
+        advancementList = new ArrayList<>();
+        finishedAdvancementList = new ArrayList<>();
+
         this.saveDefaultConfig();
         timerseconds = this.getConfig().getInt("timer");
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
@@ -75,7 +79,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         saveConfig();
     }
 
-    public static void init(){
+    public void init(){
         Iterator<Advancement> advancementIterator = Bukkit.getServer().advancementIterator();
         while(advancementIterator.hasNext()){
             Advancement a = advancementIterator.next();
@@ -89,7 +93,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
 
 
-    public static List<String> getFinishedAchievements(){
+    public List<String> getFinishedAchievements(){
         List<String> finishedStrings = new ArrayList<>();
         for(Advancement advancement : finishedAdvancementList){
             finishedStrings.add(advancement.getDisplay().getTitle());
@@ -97,7 +101,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         return finishedStrings;
     }
 
-    public static List<String> getAllAchievemnts(){
+    public List<String> getAllAchievemnts(){
         List<String> allStrings = new ArrayList<>();
         for(Advancement advancement : advancementList){
             allStrings.add(advancement.getDisplay().getTitle());
@@ -105,17 +109,17 @@ public class AllAchievements extends JavaPlugin implements Listener {
         return allStrings;
     }
 
-    public static void start(){
+    public void start(){
         //start timer and listener
         timer = true;
     }
 
-    public static void stop(){
+    public void stop(){
         //stop timer and listener
         timer = false;
     }
 
-    public static void pause(){
+    public void pause(){
         //pause timer and listener
         if(timer){
             timer = false;
@@ -124,7 +128,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         }
     }
 
-    public static void reset(){
+    public void reset(){
         timer = false;
         timerseconds = 0;
         finishedAdvancementList.clear();
