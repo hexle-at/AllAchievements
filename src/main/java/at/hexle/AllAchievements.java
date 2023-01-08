@@ -47,6 +47,12 @@ public class AllAchievements extends JavaPlugin implements Listener {
         timerseconds = this.getConfig().getInt("timer");
         newWorldOnRestart = this.getConfig().getBoolean("newWorldOnRestart");
         worlds = this.getConfig().getStringList("worldList");
+
+        List<String> list = this.getConfig().getStringList("advancements");
+        for(String s : list){
+            finishedAdvancementList.add(Bukkit.getAdvancement(NamespacedKey.fromString(s)));
+        }
+
         Bukkit.getConsoleSender().sendMessage("------------------------------------------------------");
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("._   _   _____  __  __  _       _____");
@@ -103,7 +109,11 @@ public class AllAchievements extends JavaPlugin implements Listener {
     public void onDisable(){
         Bukkit.getConsoleSender().sendMessage("Plugin shutdown...");
         FileConfiguration config = this.getConfig();
-        config.set("advancements", finishedAdvancementList);
+        List<String> names = new ArrayList<>();
+        for(Advancement a : finishedAdvancementList){
+            names.add(a.getKey().toString());
+        }
+        config.set("advancements", names);
         config.set("timer", timerseconds);
         saveConfig();
     }

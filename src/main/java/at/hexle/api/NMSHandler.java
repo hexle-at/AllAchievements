@@ -1,6 +1,5 @@
 package at.hexle.api;
 
-import com.sun.istack.internal.Nullable;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +20,6 @@ public abstract class NMSHandler {
      */
     public static final int MAJOR_VERSION = Integer.parseInt(VERSION.split("\\.")[1]);
 
-    @Nullable
     protected Class<?> getNMSClass(String pack, String name, boolean useVs) {
         Package aPackage = Bukkit.getServer().getClass().getPackage();
 
@@ -35,13 +33,11 @@ public abstract class NMSHandler {
         }
     }
 
-    @Nullable
     protected Class<?> getBukkitClass(String name) {
         return getNMSClass("org.bukkit.craftbukkit", name, true);
     }
 
-    @Nullable
-    protected Object getObject(@Nullable Class<?> clazz, Object initial, String method) {
+    protected Object getObject(Class<?> clazz, Object initial, String method) {
         try {
             clazz = clazz != null ? clazz : initial.getClass();
             return clazz.getDeclaredMethod(method).invoke(initial);
@@ -50,12 +46,10 @@ public abstract class NMSHandler {
         }
     }
 
-    @Nullable
     protected Object getObject(Object initial, String method) {
         return getObject(null, initial, method);
     }
 
-    @Nullable
     protected Object getBukkitItem(Object nmsItem) {
         Class<?> clazz = getBukkitClass("inventory.CraftItemStack");
         if (clazz == null) return null;
@@ -79,7 +73,6 @@ public abstract class NMSHandler {
         return value == null ? def : value.toString();
     }
 
-    @Nullable
     protected String checkValue(Object value) {
         return checkValue(value, null);
     }

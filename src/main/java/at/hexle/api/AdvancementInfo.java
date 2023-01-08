@@ -1,7 +1,5 @@
 package at.hexle.api;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import org.bukkit.advancement.*;
 import org.bukkit.inventory.*;
 
@@ -28,7 +26,7 @@ public class AdvancementInfo extends NMSHandler {
      * The basic constructor of the class.
      * @param adv the required advancement
      */
-    public AdvancementInfo(@NotNull Advancement adv) {
+    public AdvancementInfo(Advancement adv) {
         Class<?> craftClass = getBukkitClass("advancement.CraftAdvancement");
         if (craftClass == null) return;
 
@@ -88,7 +86,6 @@ public class AdvancementInfo extends NMSHandler {
      * {@link FrameType#CHALLENGE CHALLENGE} or {@link FrameType#UNKNOWN UNKNOWN} (if null)
      * @return the type
      */
-    @NotNull
     public String getFrameType() {
         return FrameType.getFrameType(frameType) + "";
     }
@@ -97,7 +94,6 @@ public class AdvancementInfo extends NMSHandler {
      * Gets the advancement title or main name.
      * @return the title, can be null
      */
-    @Nullable
     public String getTitle() {
         return title;
     }
@@ -115,7 +111,6 @@ public class AdvancementInfo extends NMSHandler {
      * Gets the description. If null, it will return "No description."
      * @return the description
      */
-    @NotNull
     public String getDescription() {
         return desc == null ? "No description." : desc.replaceAll("\\n", " ");
     }
@@ -125,7 +120,6 @@ public class AdvancementInfo extends NMSHandler {
      * @param length a char length
      * @return the stripped description array
      */
-    @NotNull
     public String[] getDescriptionArray(int length) {
         StringTokenizer tok = new StringTokenizer(getDescription(), " ");
         StringBuilder output = new StringBuilder(getDescription().length());
@@ -159,7 +153,6 @@ public class AdvancementInfo extends NMSHandler {
      * Gets the name of the parent advancement
      * @return the parent name
      */
-    @NotNull
     public String getParent() {
         return parent;
     }
@@ -184,7 +177,6 @@ public class AdvancementInfo extends NMSHandler {
      * Gets the item that represents the advancement.
      * @return the item, can be null
      */
-    @Nullable
     public ItemStack getItem() {
         return item;
     }
@@ -194,7 +186,6 @@ public class AdvancementInfo extends NMSHandler {
      * with the NMS AdvancementRewards class.
      * @return the rewards object, can be null
      */
-    @Nullable
     public Object getRewards() {
         return rewards;
     }
@@ -204,7 +195,6 @@ public class AdvancementInfo extends NMSHandler {
      * to a Map<String, Criterion> object.
      * @return the criteria object, can be null
      */
-    @Nullable
     public Object getCriteria() {
         return criteria;
     }
@@ -213,7 +203,6 @@ public class AdvancementInfo extends NMSHandler {
      * Get the String matrix object of the requirements.
      * @return requirements, can be null
      */
-    @Nullable
     public String[][] getRequirements() {
         return requirements;
     }

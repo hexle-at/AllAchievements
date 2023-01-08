@@ -1,7 +1,6 @@
 package at.hexle.api;
 
 import com.google.common.collect.Sets;
-import com.sun.istack.internal.Nullable;
 
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public enum FrameType {
      * @param name an input name
      * @return the respective frame type
      */
-    public static FrameType getFrameType(@Nullable String name) {
+    public static FrameType getFrameType(String name) {
         if (name == null) return UNKNOWN;
         for (FrameType type : VALUES) {
             if (name.toLowerCase().equals(type + "")) return type;
