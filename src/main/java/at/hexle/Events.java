@@ -3,12 +3,16 @@ package at.hexle;
 import at.hexle.api.AdvancementInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
+
+import java.util.Iterator;
 
 public class Events implements Listener {
 
@@ -36,7 +40,6 @@ public class Events implements Listener {
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§6Want to play again? Type §a/av restart §6(There will be a new world and the server will be restarted.)");
             Bukkit.broadcastMessage(" ");
-
         }
     }
 
@@ -59,10 +62,22 @@ public class Events implements Listener {
 
 
     @EventHandler
-    public void onJoin(PlayerPreLoginEvent event){
+    public void onPreJoin(PlayerPreLoginEvent event){
         if(AllAchievements.getInstance().isRestartTriggered()){
             event.setResult(PlayerPreLoginEvent.Result.KICK_OTHER);
             event.setKickMessage("§cThe challenge is restarting ... Please try again in a few seconds!");
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
+        if(AllAchievements.getInstance().getResetPlayers().contains(event.getPlayer().getUniqueId().toString())){
+            Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
+            while (iterator.hasNext()){
+                AdvancementProgress progress = event.getPlayer().getAdvancementProgress(iterator.next());
+                for (String criteria : progress.getAwardedCriteria()) progress.revokeCriteria(criteria);
+            }
+            AllAchievements.getInstance().getResetPlayers().remove(event.getPlayer().getUniqueId().toString());
         }
     }
 

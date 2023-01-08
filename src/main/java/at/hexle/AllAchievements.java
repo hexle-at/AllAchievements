@@ -29,6 +29,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
     private boolean restartTriggered = false;
     private int timerseconds = 0;
     private List<String> worlds;
+    private List<String> resetPlayers; //uuid
 
     private static AllAchievements instance;
 
@@ -37,6 +38,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         instance = this;
         advancementList = new ArrayList<>();
         finishedAdvancementList = new ArrayList<>();
+        resetPlayers = new ArrayList<>();
 
         try{
             version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -196,6 +198,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         if(newWorldOnRestart && restartTriggered){
             for(String world : worlds){
                 if(Bukkit.getWorld(world) == null) continue;
+                System.out.println("Generating new world: "+world);
                 File worldFile = Bukkit.getWorld(world).getWorldFolder();
                 Bukkit.unloadWorld(world, false);
                 worldFile.delete();
@@ -225,6 +228,10 @@ public class AllAchievements extends JavaPlugin implements Listener {
         for(OfflinePlayer player : Bukkit.getOfflinePlayers()){
             Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
             while (iterator.hasNext()){
+                if(player.getPlayer() == null){
+                    resetPlayers.add(player.getUniqueId().toString());
+                    continue;
+                }
                 AdvancementProgress progress = player.getPlayer().getAdvancementProgress(iterator.next());
                 for (String criteria : progress.getAwardedCriteria()) progress.revokeCriteria(criteria);
             }
@@ -268,5 +275,9 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public String getVersion(){
         return version;
+    }
+
+    public List<String> getResetPlayers(){
+        return resetPlayers;
     }
 }
