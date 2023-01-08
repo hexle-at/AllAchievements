@@ -12,6 +12,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onAchievement(PlayerAdvancementDoneEvent event){
+        if(event.getAdvancement() == null || event.getAdvancement().getDisplay() == null) return;
         if(!event.getAdvancement().getDisplay().shouldAnnounceChat()) return;
         if(AllAchievements.getInstance().getFinishedAdvancementList().contains(event.getAdvancement())) return;
         AllAchievements.getInstance().getFinishedAdvancementList().add(event.getAdvancement());
@@ -40,6 +41,8 @@ public class Events implements Listener {
                 page--;
             }else if(event.getSlot() == 50){
                 page++;
+            }else{
+                return;
             }
             Stats.showStats((Player) event.getWhoClicked(), page);
         }
@@ -53,4 +56,5 @@ public class Events implements Listener {
             event.setKickMessage("§cThe challenge is restarting ... Please try again in a few seconds!");
         }
     }
+
 }
