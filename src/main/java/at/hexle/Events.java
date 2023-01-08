@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 
 public class Events implements Listener {
@@ -56,4 +55,5 @@ public class Events implements Listener {
             event.setKickMessage("§cThe challenge is restarting ... Please try again in a few seconds!");
         }
     }
+
 }
