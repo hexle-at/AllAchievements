@@ -60,7 +60,8 @@ public class AllAchievements extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage("Hexle_Development_Systems - https://hexle.at");
         Bukkit.getConsoleSender().sendMessage("");
-        if(!version.startsWith("v1_19")
+        if(!version.startsWith("v1_20")
+                && !version.startsWith("v1_19")
                 && !version.startsWith("v1_18")
                 && !version.startsWith("v1_17")
                 && !version.startsWith("v1_16")
@@ -120,7 +121,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
         while(advancementIterator.hasNext()){
             Advancement a = advancementIterator.next();
             try {
-                if(version.startsWith("v1_19")){
+                if(version.startsWith("v1_19") || version.startsWith("v1_20")){
                     if (Objects.requireNonNull(a.getDisplay()).shouldAnnounceChat()) {
                         advancementList.add(a);
                     }
@@ -138,7 +139,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public List<String> getFinishedAchievements(){
         List<String> finishedStrings = new ArrayList<>();
-        if(version.startsWith("v1_19")){
+        if(version.startsWith("v1_19") || version.startsWith("v1_20")){
             for(Advancement advancement : finishedAdvancementList){
                 finishedStrings.add(advancement.getDisplay().getTitle());
             }
@@ -154,7 +155,7 @@ public class AllAchievements extends JavaPlugin implements Listener {
 
     public List<String> getAllAchievements(){
         List<String> allStrings = new ArrayList<>();
-        if(version.startsWith("v1_19")){
+        if(version.startsWith("v1_19") || version.startsWith("v1_20")){
             for(Advancement advancement : advancementList){
                 allStrings.add(advancement.getDisplay().getTitle());
             }

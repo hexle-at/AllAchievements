@@ -17,7 +17,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onAchievement(PlayerAdvancementDoneEvent event){
-        if(AllAchievements.getInstance().getVersion().startsWith("v1_19")) {
+        if(AllAchievements.getInstance().getVersion().startsWith("v1_19") || AllAchievements.getInstance().getVersion().startsWith("v1_20")) {
             if (event.getAdvancement() == null || event.getAdvancement().getDisplay() == null) return;
             if (!event.getAdvancement().getDisplay().shouldAnnounceChat()) return;
         }else{
