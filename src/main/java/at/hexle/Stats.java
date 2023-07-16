@@ -39,7 +39,7 @@ public class Stats {
                     is = new ItemStack(Material.GREEN_DYE, 1);
                 }
                 ItemMeta im = is.getItemMeta();
-                im.setDisplayName("§7"+pagination.get(i));
+                im.setDisplayName("§6"+p);
                 is.setItemMeta(im);
                 inv.setItem(i, is);
             }else{
@@ -50,7 +50,7 @@ public class Stats {
                     is = new ItemStack(Material.RED_DYE, 1);
                 }
                 ItemMeta im = is.getItemMeta();
-                im.setDisplayName("§7"+pagination.get(i));
+                im.setDisplayName("§6"+p);
                 is.setItemMeta(im);
                 inv.setItem(i, is);
             }
